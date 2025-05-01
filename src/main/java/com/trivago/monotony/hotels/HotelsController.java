@@ -34,20 +34,12 @@ public class HotelsController {
     Mono<Hotel> getHotel(@PathVariable int id) {
         logger.info("Fetching hotel with id {}", id);
         return hotelsRepository.findById(id)
-                .switchIfEmpty(hotelNotFoundError())
-                .flatMap(this::toHotelWithPricesAndReviews);
-    }
-
-    private Mono<Hotel> toHotelWithPricesAndReviews(Hotel hotel) {
-        return Mono.zip(
-                fetchPrices(hotel.id()).collectList(),
-                fetchReviews(hotel.id()).collectList(),
-                (prices, reviews) -> new Hotel(hotel.id(), hotel.name(), hotel.description(), hotel.rating(), reviews, prices)
-        );
-    }
-
-    private Mono<Hotel> hotelNotFoundError() {
-        return Mono.error(new ResponseStatusException(NOT_FOUND, "Hotel not found"));
+                .switchIfEmpty(Mono.error(new ResponseStatusException(NOT_FOUND, "Hotel not found")))
+                .flatMap(hotel -> Mono.zip(
+                        fetchPrices(hotel.id()).collectList(),
+                        fetchReviews(hotel.id()).collectList(),
+                        (prices, reviews) -> new Hotel(hotel.id(), hotel.name(), hotel.description(), hotel.rating(), reviews, prices)
+                ));
     }
 
     private Flux<Price> fetchPrices(int hotelId) {
