@@ -1,4 +1,4 @@
 package com.trivago.monotony.products;
 
-record Product(int id, String name, int categoryId) {
+public record Product(int id, String name, int categoryId) {
 }
