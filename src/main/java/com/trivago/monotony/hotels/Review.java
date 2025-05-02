@@ -1,4 +1,4 @@
 package com.trivago.monotony.hotels;
 
-record Review(int rating, String comment) {
+public record Review(int rating, String comment) {
 }

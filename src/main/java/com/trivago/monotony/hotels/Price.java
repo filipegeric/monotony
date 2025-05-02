@@ -1,4 +1,4 @@
 package com.trivago.monotony.hotels;
 
-record Price(int amountInEuros, String provider) {
+public record Price(int amountInEuros, String provider) {
 }
