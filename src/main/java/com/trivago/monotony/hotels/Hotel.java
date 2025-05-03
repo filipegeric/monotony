@@ -2,7 +2,7 @@ package com.trivago.monotony.hotels;
 
 import java.util.List;
 
-record Hotel(
+public record Hotel(
         int id,
         String name,
         String description,

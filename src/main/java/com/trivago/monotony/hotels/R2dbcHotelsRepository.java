@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-class R2dbcHotelsRepository implements HotelsRepository {
+public class R2dbcHotelsRepository implements HotelsRepository {
     private final DatabaseClient db;
 
     R2dbcHotelsRepository(DatabaseClient db) {
