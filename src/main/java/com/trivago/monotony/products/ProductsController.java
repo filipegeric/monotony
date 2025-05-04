@@ -13,7 +13,7 @@ public class ProductsController {
     
     private final ProductsRepository productsRepository;
 
-    ProductsController(ProductsRepository productsRepository) {
+    public ProductsController(ProductsRepository productsRepository) {
         this.productsRepository = productsRepository;
     }
 
