@@ -31,6 +31,53 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+__ This talk is about: __
+
+* Backend/Servers
+* Java, Kotlin, and JVM
+* Concurrency
+* SpringBoot
+* Reactive programming
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 __ What do servers do these days? __
 
 * Receive requests
@@ -250,7 +297,7 @@ __ This turns out to be more performant __
 
 
 
-__ But at what cost? __
+__ Can we have the cake and eat it too? __
 
 
 
