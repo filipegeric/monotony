@@ -1,5 +1,3 @@
-package com.trivago.monotony;
-
 /*
   _    _                 _                     _                           __  __
  | |  | |               | |                   | |                         |  \/  |
@@ -15,6 +13,8 @@ package com.trivago.monotony;
                  | '_ \| || | | _| | || || || '_ \ | _| / _` |/ -_)| '_|| |/ _|
                  |_.__/ \_, | |_|  |_||_||_|| .__/ |___|\__, |\___||_|  |_|\__|
                         |__/                |_|         |___/
+
+
 
 
 
@@ -138,8 +138,8 @@ User getUser() {                      ->        Mono<User> getUser() {
     return new User(1, "Filip");      ->            return Mono.just(new User(1, "Filip"));
 }                                     ->        }
 
-
-
+Mono is a reactive primitive from project reactor (used by SpringBoot webflux)
+And there is also Flux...
 
 
 
@@ -275,7 +275,7 @@ __ But at what cost? __
 
 
 */
-
+package com.trivago.monotony;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
