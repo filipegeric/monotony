@@ -1,12 +1,15 @@
 package com.trivago.monotony.hotels
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 import java.time.Duration
 
 private val logger = LoggerFactory.getLogger(HotelsController::class.java)
@@ -18,18 +21,23 @@ class HotelsController(private val hotelsRepository: HotelsRepository) {
     fun getHotels(): Flux<Hotel> = hotelsRepository.findAll()
 
     @GetMapping("/{id}")
-    fun getHotel(@PathVariable id: Int): Mono<Hotel> {
+    suspend fun getHotel(@PathVariable id: Int): Hotel = coroutineScope {
         logger.info("Fetching hotel with id {}", id)
-        return hotelsRepository.findById(id)
-            .switchIfEmpty(Mono.error(HotelNotFoundException(id)))
-            .flatMap { hotel ->
-                Mono.zip(
-                    fetchPrices(hotel.id).collectList(),
-                    fetchReviews(hotel.id).collectList(),
-                ) { prices, reviews ->
-                    Hotel(hotel.id, hotel.name, hotel.description, hotel.rating, reviews, prices)
-                }
-            }
+        val hotel = hotelsRepository.findById(id).awaitSingleOrNull()
+        if (hotel == null) {
+            throw HotelNotFoundException(id)
+        }
+        val prices = async { fetchPrices(id).collectList().awaitSingle() }
+        val reviews = async { fetchReviews(id).collectList().awaitSingle() }
+
+        Hotel(
+            hotel.id,
+            hotel.name,
+            hotel.description,
+            hotel.rating,
+            reviews.await(),
+            prices.await(),
+        )
     }
 
     private fun fetchPrices(hotelId: Int): Flux<Price> {
